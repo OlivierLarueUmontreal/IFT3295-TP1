@@ -110,4 +110,13 @@ def matrice_chevauchements(reads: list[str]) -> list[list[int]]:
         maximal de la paire ordonnee ``(reads[i], reads[j])``. La diagonale
         contient des zeros.
     """
-    raise NotImplementedError  # TODO
+    n: int = len(reads)
+    scores: list[list[int]] = [[0] * n for _ in range(n)]
+
+    # calcul le score max pour chaque pair i,j
+    for i in range(n):
+        for j in range(n):
+            if i != j: # Pour éviter la diagonale
+                scores[i][j] = chevauchement_maximal(reads[i], reads[j])[0]
+
+    return scores
