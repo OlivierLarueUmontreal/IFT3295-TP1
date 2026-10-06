@@ -98,7 +98,7 @@ def reduction_transitive(graphe: nx.DiGraph) -> nx.DiGraph:
         # On retire le edge initialement, s'il n'y a pas d'autre chemin possible u -> v,
         #  alors on remet l'arrete, sinon on la laisse retirer, elle est redondante
         if not chemin_existe(graphe_reduit, u, v):
-            graphe_reduit.add_edge(u, v, poids)
+            graphe_reduit.add_edge(u, v, poids=poids)
 
 
     return graphe_reduit
@@ -124,7 +124,7 @@ def ordre_assemblage(graphe: nx.DiGraph) -> list[int]:
     # Trouver le premier node: https://stackoverflow.com/questions/61845326/with-networks-how-to-find-first-nodes-in-a-digraph
     root = [node for node, in_degree in graphe.in_degree if in_degree == 0]
     if len(root) > 1 :
-        raise ValueError(f"Erreur, il n'y a pas qu'un seul node de depart, mais bien: {len(depart)}")
+        raise ValueError(f"Erreur, il n'y a pas qu'un seul node de depart, mais bien: {len(root)}")
 
     current = root[0]
     result = [current]
@@ -133,7 +133,7 @@ def ordre_assemblage(graphe: nx.DiGraph) -> list[int]:
     seen: set[int] = {current} 
 
     while True:
-        successeurs = list(graphe.sucessors(current))
+        successeurs = list(graphe.successors(current))
 
         if not successeurs: break # s'il n'y a plus de successeur: terminer
 
@@ -159,4 +159,25 @@ def sequence_finale(reads: list[str], ordre: list[int]) -> tuple[str, list[int]]
         longueurs des chevauchements entre les paires de reads consecutifs,
         dans l'ordre.
     """ 
-    raise NotImplementedError  # TODO
+
+    # Liste des morceaux du fragment, commence avec le premier read en entier
+    # (il n'a pas de predecesseur, donc rien n'est deja couvert)
+    fragments: list[str] = [reads[ordre[0]]]
+    longueurs: list[int] = []
+
+    # Commence par 1 pour skip ordre[0] qui est deja dans fragments
+    # Permettant a chaque iteration d'avoir un precedent
+    for i in range(1, len(ordre)):
+        x: int = ordre[i - 1] # le precedent, qui agit comme chaine x
+        y: int = ordre[i] # current, qui agit comme chaine y
+
+        score, alignement_x, alignement_y, longueur = chevauchement_maximal(reads[x], reads[y])
+
+        # On prends seulement le substring apres le chevauchement avec y
+        # ex: GTTCCA
+        #        CCAGTG, on veut seulement garder GTG puisque CCA a ete ajouter precedement
+        fragments.append(reads[y][len(alignement_y):])
+        longueurs.append(longueur)
+
+
+    return "".join(fragments), longueurs
