@@ -116,7 +116,7 @@ def matrice_chevauchements(reads: list[str]) -> list[list[int]]:
     # calcul le score max pour chaque pair i,j
     for i in range(n):
         for j in range(n):
-            if i != j: # Pour éviter la diagonale
+            if i != j: # Pour éviter la diagonale nulle
                 scores[i][j] = chevauchement_maximal(reads[i], reads[j])[0]
 
     return scores
