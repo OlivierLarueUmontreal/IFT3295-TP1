@@ -43,12 +43,7 @@ def traduire_seq2aa_ORF(seq):
             orf_len = i - startindex
             if orf_len > maxlength: 
                 maxlength = orf_len
-                maxindex = startindex
-
-             # le ribosome arrete sa lecture 
-    print(maxlength)
-    print(maxindex)
-    
+                maxindex = startindex    
 
     aaseq = []
     start = False
@@ -71,7 +66,6 @@ def traduire_seq2aa_3ORF(seq):
     return(ORF1,ORF2,ORF3)
     
 protXnucseq = utils.read_single_fasta_sequence("../donnees/sequence.fasta")
-print(protXnucseq)
 # a) le cadre de lecture de la prot
 print(traduire_seq2aa_3ORF(protXnucseq))
 print(utils.read_fasta_sequences("../donnees/geneX.fasta"))
