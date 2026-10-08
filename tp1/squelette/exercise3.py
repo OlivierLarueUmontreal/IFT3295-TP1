@@ -57,15 +57,15 @@ def traduire_seq2aa_ORF(seq):
         if start : aaseq.append(aa)
 
         
-    return "".join(aaseq)
+    return "".join(aaseq),maxindex
 
 def traduire_seq2aa_3ORF(seq):
-    ORF1 = traduire_seq2aa_ORF(seq)
+    ORF1,iORF1 = traduire_seq2aa_ORF(seq)
     ORF2 = traduire_seq2aa_ORF(seq[1:])
     ORF3 = traduire_seq2aa_ORF(seq[2:])
     return(ORF1,ORF2,ORF3)
     
 protXnucseq = utils.read_single_fasta_sequence("../donnees/sequence.fasta")
 # a) le cadre de lecture de la prot
-print(traduire_seq2aa_3ORF(protXnucseq))
-print(utils.read_fasta_sequences("../donnees/geneX.fasta"))
+print(traduire_seq2aa_3ORF(protXnucseq)[1])
+print(utils.read_fasta_sequences("../donnees/geneX.fasta")["geneX"])
