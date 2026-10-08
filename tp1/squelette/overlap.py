@@ -66,7 +66,7 @@ def chevauchement_maximal(x: str, y: str) -> tuple[int, str, str, int]:
     j: int = best_j
 
     while i > 0 and j > 0:
-        current = V[i][j];
+        current = V[i][j]
         diagonal = V[i - 1][j - 1]
         left = V[i-1][j]
         up = V[i][j-1]

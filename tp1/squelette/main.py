@@ -101,6 +101,10 @@ def _commande_assemblage(args: argparse.Namespace) -> None:
     )
 
     reduit: nx.DiGraph = reduction_transitive(graphe)
+    nx.drawing.nx_pydot.write_dot(
+        nx.relabel_nodes(reduit, dict(enumerate(identifiants))), "graphe_reduit.dot"
+    )
+
     ordre: list[int] = ordre_assemblage(reduit)
     sequence, longueurs = sequence_finale(sequences, ordre)
 
